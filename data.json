@@ -1,0 +1,211 @@
+{
+  "tasks": [
+    {
+      "id": "task_1772743017022",
+      "createdAt": "2026-03-05T20:36:57.022Z",
+      "title": "תוכנית רכש",
+      "project": "בבילון",
+      "assignee": "מאור",
+      "dueDate": "2026-03-08",
+      "status": "in_progress",
+      "statusText": "",
+      "showstopper": false,
+      "updatedAt": "2026-03-05T23:15:09.865Z",
+      "isManager": false,
+      "isCTO": false,
+      "priority": "medium",
+      "subtasks": [
+        {
+          "id": "sub_17727524411627hofco8jg",
+          "title": "לפוצץ BOM - SA",
+          "completed": false
+        },
+        {
+          "id": "sub_1772752456858cai86wd97",
+          "title": "לפוצץ BOM - לחמניה",
+          "completed": false
+        },
+        {
+          "id": "sub_1772752471198j4di2os0c",
+          "title": "לפוצץ BOM - S23",
+          "completed": false
+        },
+        {
+          "id": "sub_1772752483276t5qbapj34",
+          "title": "רכש לפטופ",
+          "completed": false
+        },
+        {
+          "id": "sub_1772752489437v3jmclv50",
+          "title": "רכש FORTINET",
+          "completed": false
+        }
+      ]
+    },
+    {
+      "id": "task_1772743192063",
+      "createdAt": "2026-03-05T20:39:52.063Z",
+      "title": "IPT שבועי",
+      "project": "כללי",
+      "assignee": "מאור",
+      "dueDate": "2026-03-09",
+      "status": "pending",
+      "statusText": "",
+      "showstopper": false,
+      "updatedAt": "2026-03-05T20:39:52.063Z",
+      "priority": "medium"
+    },
+    {
+      "id": "task_1772742777788",
+      "createdAt": "2026-03-05T20:32:57.788Z",
+      "title": "COM IT הצעת מחיר",
+      "project": "בבילון",
+      "assignee": "מאור",
+      "dueDate": "2026-03-12",
+      "status": "in_progress",
+      "statusText": "אביב",
+      "showstopper": false,
+      "updatedAt": "2026-03-05T20:51:59.699Z",
+      "priority": "medium"
+    },
+    {
+      "id": "task_1772742990233",
+      "createdAt": "2026-03-05T20:36:30.233Z",
+      "title": "הקמת דמו",
+      "project": "בבילון",
+      "assignee": "מאור",
+      "dueDate": "2026-03-15",
+      "status": "pending",
+      "statusText": "S23 / לחמניה / SA",
+      "showstopper": false,
+      "updatedAt": "2026-03-05T20:36:30.233Z",
+      "priority": "medium"
+    },
+    {
+      "id": "task_1772743086163",
+      "createdAt": "2026-03-05T20:38:06.163Z",
+      "title": "החלפת מכסה עליון עטלפים דור 0",
+      "project": "עטלף",
+      "assignee": "מאור",
+      "dueDate": "2026-03-08",
+      "status": "in_progress",
+      "statusText": "אביב",
+      "showstopper": false,
+      "updatedAt": "2026-03-05T20:52:09.703Z",
+      "isManager": false,
+      "isCTO": true,
+      "priority": "medium"
+    },
+    {
+      "id": "task_1772743159748",
+      "createdAt": "2026-03-05T20:39:19.748Z",
+      "title": "חשבוניות",
+      "project": "כללי",
+      "assignee": "מאור",
+      "dueDate": "2026-03-15",
+      "status": "pending",
+      "statusText": "",
+      "showstopper": false,
+      "updatedAt": "2026-03-05T20:39:19.748Z",
+      "priority": "medium"
+    },
+    {
+      "id": "task_1772743277064",
+      "createdAt": "2026-03-05T20:41:17.064Z",
+      "title": "הפעלת בבילון + FIPS",
+      "project": "בבילון",
+      "assignee": "אלקטרוניקה",
+      "dueDate": "2026-03-05",
+      "status": "in_progress",
+      "statusText": "דחוף אביב",
+      "showstopper": false,
+      "updatedAt": "2026-03-05T20:50:29.016Z",
+      "isManager": false,
+      "isCTO": true,
+      "priority": "medium"
+    },
+    {
+      "id": "task_1772744195720",
+      "createdAt": "2026-03-05T20:56:35.720Z",
+      "title": "תקלת \"אין מסך\" לאחר טעינת מפתחות",
+      "project": "עטלף",
+      "assignee": "מאור",
+      "dueDate": "2026-03-08",
+      "status": "stuck",
+      "statusText": "",
+      "showstopper": false,
+      "isManager": false,
+      "isCTO": true,
+      "priority": "medium",
+      "updatedAt": "2026-03-05T20:56:51.858Z"
+    },
+    {
+      "id": "task_1772744310148",
+      "createdAt": "2026-03-05T20:58:30.149Z",
+      "title": "להוציא סיכום סטאוטס מוביליטי - רוני",
+      "project": "מוביליטי",
+      "assignee": "מאור",
+      "dueDate": "2026-03-08",
+      "status": "pending",
+      "statusText": "",
+      "showstopper": false,
+      "isManager": false,
+      "isCTO": false,
+      "priority": "medium",
+      "updatedAt": "2026-03-05T20:58:30.148Z"
+    }
+  ],
+  "purchases": [
+    {
+      "id": "purchase_1772742835913",
+      "createdAt": "2026-03-05T20:33:55.913Z",
+      "title": "גאקטים",
+      "sku": "HPL72338",
+      "project": "S23",
+      "quantity": "288",
+      "date": "2026-03-05",
+      "deliveryDate": "2026-03-06",
+      "status": "ordered",
+      "updatedAt": "2026-03-05T20:33:55.913Z"
+    },
+    {
+      "id": "purchase_1772744428031",
+      "createdAt": "2026-03-05T21:00:28.031Z",
+      "title": "גאקטים",
+      "sku": "HPL72338",
+      "project": "S23",
+      "quantity": "2000",
+      "date": "2026-03-05",
+      "deliveryDate": "2026-03-20",
+      "status": "ordered",
+      "updatedAt": "2026-03-05T21:00:28.031Z"
+    },
+    {
+      "id": "purchase_1772744463575",
+      "createdAt": "2026-03-05T21:01:03.575Z",
+      "title": "גאקטים",
+      "sku": "HPL72338",
+      "project": "S23",
+      "quantity": "2712",
+      "date": "2026-03-05",
+      "deliveryDate": "2026-03-28",
+      "status": "ordered",
+      "updatedAt": "2026-03-05T21:01:03.575Z"
+    }
+  ],
+  "targets": [
+    {
+      "id": "target_1772746572882",
+      "createdAt": "2026-03-05T21:36:12.882Z",
+      "title": "ייצור 450 יחידות",
+      "project": "S23",
+      "dueDate": "2026-03-31",
+      "status": "in_progress",
+      "updatedAt": "2026-03-05T22:17:55.031Z",
+      "trackingType": "quantitative",
+      "targetValue": 450,
+      "actualValue": 150
+    }
+  ],
+  "lastSync": "2026-03-06T00:06:20.243Z"
+}

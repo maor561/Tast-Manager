@@ -3593,7 +3593,7 @@ function exportData() {
         'CTO': t.isCTO ? 'כן' : 'לא',
         'תאריך יצירה': t.createdAt,
         'עדכון אחרון': t.updatedAt,
-        'תת-משימות': t.subtasks ? t.subtasks.map(s => s.title).join('; ') : ''
+        'תת-משימות': t.subtasks ? t.subtasks.map(s => s.completed ? `${s.title} (✓)` : s.title).join('; ') : ''
     }));
 
     // 2. Prepare Purchases Data
@@ -3707,7 +3707,11 @@ function importData(e) {
                 isCTO: row['CTO'] === 'כן',
                 createdAt: row['תאריך יצירה'] || new Date().toISOString(),
                 updatedAt: row['עדכון אחרון'] || new Date().toISOString(),
-                subtasks: row['תת-משימות'] ? row['תת-משימות'].split('; ').map(s => ({ id: 'sub_' + Date.now() + Math.random(), title: s, completed: false })) : []
+                subtasks: row['תת-משימות'] ? row['תת-משימות'].split('; ').map(s => {
+                    const isCompleted = s.includes(' (✓)');
+                    const title = s.replace(' (✓)', '').trim();
+                    return { id: 'sub_' + Date.now() + Math.random(), title: title, completed: isCompleted };
+                }) : []
             }));
         }
 

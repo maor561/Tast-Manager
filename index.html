@@ -6029,46 +6029,49 @@ function viewTask(taskId) {
         document.getElementById('view-subtasks-section').style.display = 'block';
 
         // Add event listeners to subtask checkboxes
-        setTimeout(() => {
-            const checkboxes = subtaskList.querySelectorAll('.view-subtask-checkbox');
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', (e) => {
-                    const taskId = checkbox.dataset.taskId;
-                    const subtaskId = checkbox.dataset.subtaskId;
-                    const task = tasks.find(t => t.id === taskId);
-                    if (task) {
-                        const subtask = task.subtasks.find(s => s.id === subtaskId);
-                        if (subtask) {
-                            subtask.completed = checkbox.checked;
-                            saveTasks();
-                            // Update the span styling
-                            const span = checkbox.nextElementSibling;
-                            if (span) {
-                                if (subtask.completed) {
-                                    span.style.textDecoration = 'line-through';
-                                    span.style.color = 'var(--text-secondary)';
-                                } else {
-                                    span.style.textDecoration = 'none';
-                                    span.style.color = '';
-                                }
-                            }
-                        }
-                    }
-                });
-            });
+        const checkboxes = subtaskList.querySelectorAll('.view-subtask-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', (e) => {
+                const taskId = checkbox.dataset.taskId;
+                const subtaskIdx = parseInt(checkbox.dataset.subtaskIdx);
 
-            // Also allow clicking on the span to toggle the checkbox
-            const spans = subtaskList.querySelectorAll('.view-subtask-span');
-            spans.forEach(span => {
-                span.addEventListener('click', () => {
-                    const checkbox = span.previousElementSibling;
-                    if (checkbox) {
-                        checkbox.checked = !checkbox.checked;
-                        checkbox.dispatchEvent(new Event('change'));
+                // Find and update the task
+                for (let i = 0; i < tasks.length; i++) {
+                    if (tasks[i].id === taskId) {
+                        if (tasks[i].subtasks && tasks[i].subtasks[subtaskIdx]) {
+                            tasks[i].subtasks[subtaskIdx].completed = checkbox.checked;
+                            saveTasks();
+                            console.log('Subtask saved:', tasks[i].subtasks[subtaskIdx]);
+                        }
+                        break;
                     }
-                });
+                }
+
+                // Update the span styling
+                const span = checkbox.nextElementSibling;
+                if (span) {
+                    if (checkbox.checked) {
+                        span.style.textDecoration = 'line-through';
+                        span.style.color = 'var(--text-secondary)';
+                    } else {
+                        span.style.textDecoration = 'none';
+                        span.style.color = '';
+                    }
+                }
             });
-        }, 0);
+        });
+
+        // Also allow clicking on the span to toggle the checkbox
+        const spans = subtaskList.querySelectorAll('.view-subtask-span');
+        spans.forEach(span => {
+            span.addEventListener('click', () => {
+                const checkbox = span.previousElementSibling;
+                if (checkbox) {
+                    checkbox.checked = !checkbox.checked;
+                    checkbox.dispatchEvent(new Event('change'));
+                }
+            });
+        });
     } else {
         document.getElementById('view-subtasks-section').style.display = 'none';
     }

@@ -2805,19 +2805,24 @@ function setupEventListeners() {
     const closeViewBtn = document.getElementById('close-view-btn');
     const editFromViewBtn = document.getElementById('edit-from-view-btn');
 
-    if (closeViewPanelBtn) closeViewPanelBtn.addEventListener('click', () => {
-        taskViewPanel.style.display = 'none';
-    });
-    if (closeViewBtn) closeViewBtn.addEventListener('click', () => {
-        taskViewPanel.style.display = 'none';
-    });
+    function closeViewPanel() {
+        taskViewPanel.classList.remove('active');
+        setTimeout(() => {
+            taskViewPanel.style.display = 'none';
+        }, 300);
+    }
+
+    if (closeViewPanelBtn) closeViewPanelBtn.addEventListener('click', closeViewPanel);
+    if (closeViewBtn) closeViewBtn.addEventListener('click', closeViewPanel);
     if (editFromViewBtn) editFromViewBtn.addEventListener('click', () => {
         const taskId = editFromViewBtn.dataset.taskId;
-        taskViewPanel.style.display = 'none';
-        editTask(taskId);
+        closeViewPanel();
+        setTimeout(() => {
+            editTask(taskId);
+        }, 300);
     });
     taskViewPanel.addEventListener('click', (e) => {
-        if (e.target === taskViewPanel) taskViewPanel.style.display = 'none';
+        if (e.target === taskViewPanel) closeViewPanel();
     });
 
     // Purchase Modal
@@ -6026,8 +6031,10 @@ function viewTask(taskId) {
     // Store current task ID for edit button
     document.getElementById('edit-from-view-btn').dataset.taskId = taskId;
 
-    // Show the view panel
-    document.getElementById('task-view-panel').style.display = 'flex';
+    // Show the view panel by adding active class
+    const viewPanel = document.getElementById('task-view-panel');
+    viewPanel.style.display = 'flex';
+    viewPanel.classList.add('active');
 }
 
 // ================ END GANTT CHART ================

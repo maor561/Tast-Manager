@@ -187,6 +187,14 @@ body {
     margin-bottom: 3rem;
 }
 
+.logo-img {
+    width: 100%;
+    max-width: 180px;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.3));
+}
+
 .logo-icon {
     width: 40px;
     height: 40px;
@@ -1784,8 +1792,7 @@ body.presentation-mode #exit-presentation-btn {
         <!-- Sidebar Navigation -->
         <nav class="sidebar">
             <div class="logo">
-                <div class="logo-icon"><i class="fa-solid fa-layer-group"></i></div>
-                <h1>מאורגן</h1>
+                <img src="logo.png" alt="מאורגן" class="logo-img">
             </div>
             <ul class="nav-links">
                 <li class="active" data-target="dashboard"><i class="fa-solid fa-chart-pie"></i> דאשבורד</li>

@@ -2299,63 +2299,139 @@ body.presentation-mode #exit-presentation-btn {
 
     <!-- Task View Panel (Read-only) -->
     <div class="modal-overlay" id="task-view-panel" style="display: none;">
-        <div class="modal-content glass-card" style="max-width: 600px;">
-            <div class="modal-header">
-                <h2 id="view-task-title">פרטי המשימה</h2>
-                <button class="close-modal" id="close-view-panel-btn"><i class="fa-solid fa-xmark"></i></button>
+        <div id="task-view-card" style="
+            background: var(--bg-surface);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            animation: slideUp 0.3s ease;
+        ">
+            <!-- Colored Header Banner -->
+            <div id="view-header-banner" style="
+                padding: 1.5rem 1.5rem 1rem;
+                position: relative;
+            ">
+                <!-- Close button -->
+                <button id="close-view-panel-btn" style="
+                    position: absolute; top: 1rem; left: 1rem;
+                    background: rgba(255,255,255,0.15);
+                    border: none; color: white;
+                    width: 32px; height: 32px;
+                    border-radius: 50%; cursor: pointer;
+                    font-size: 0.9rem; display: flex;
+                    align-items: center; justify-content: center;
+                    transition: background 0.2s;
+                " onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+                <!-- Status badge top right -->
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 0.75rem;">
+                    <span id="view-status-badge" style="
+                        padding: 0.3rem 0.8rem;
+                        border-radius: 20px;
+                        font-size: 0.75rem;
+                        font-weight: 700;
+                        background: rgba(255,255,255,0.2);
+                        color: white;
+                        letter-spacing: 0.5px;
+                    ">-</span>
+                </div>
+
+                <!-- Task Title -->
+                <h2 id="view-task-title" style="
+                    margin: 0 0 0.5rem;
+                    color: white;
+                    font-size: 1.3rem;
+                    font-weight: 700;
+                    line-height: 1.3;
+                ">-</h2>
+
+                <!-- Project name -->
+                <div style="display: flex; align-items: center; gap: 0.4rem; color: rgba(255,255,255,0.8); font-size: 0.85rem;">
+                    <i class="fa-solid fa-folder"></i>
+                    <span id="view-task-project">-</span>
+                </div>
             </div>
 
-            <div style="padding: 1.5rem; color: var(--text-primary);">
-                <!-- Task Details -->
-                <div style="margin-bottom: 1.5rem;">
-                    <div style="display: grid; grid-template-columns: 120px 1fr; gap: 1rem; margin-bottom: 1rem;">
-                        <strong>כותרת:</strong>
-                        <span id="view-task-title-value">-</span>
+            <!-- Body -->
+            <div style="padding: 1.25rem 1.5rem; overflow-y: auto; flex: 1;">
+
+                <!-- Meta pills row -->
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+                    <span id="view-priority-badge" style="
+                        display: inline-flex; align-items: center; gap: 0.3rem;
+                        padding: 0.3rem 0.75rem; border-radius: 20px;
+                        font-size: 0.75rem; font-weight: 600;
+                        border: 1px solid var(--border-glass);
+                        color: var(--text-primary);
+                        background: var(--bg-glass);
+                    ">-</span>
+                    <span id="view-showstopper-badge" style="display: none;
+                        display: inline-flex; align-items: center; gap: 0.3rem;
+                        padding: 0.3rem 0.75rem; border-radius: 20px;
+                        font-size: 0.75rem; font-weight: 600;
+                        background: rgba(239,68,68,0.15);
+                        color: #ef4444;
+                        border: 1px solid rgba(239,68,68,0.3);
+                    "><i class="fa-solid fa-triangle-exclamation"></i> Showstopper</span>
+                </div>
+
+                <!-- Info rows -->
+                <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.25rem;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; background: var(--bg-glass); border-radius: 10px; border: 1px solid var(--border-glass);">
+                        <i class="fa-solid fa-user" style="color: var(--accent-primary); width: 16px; text-align: center;"></i>
+                        <span style="color: var(--text-secondary); font-size: 0.8rem; width: 70px; flex-shrink: 0;">אחראי</span>
+                        <span id="view-task-assignee" style="color: var(--text-primary); font-weight: 600; font-size: 0.9rem;">-</span>
                     </div>
-                    <div style="display: grid; grid-template-columns: 120px 1fr; gap: 1rem; margin-bottom: 1rem;">
-                        <strong>פרויקט:</strong>
-                        <span id="view-task-project">-</span>
+                    <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; background: var(--bg-glass); border-radius: 10px; border: 1px solid var(--border-glass);">
+                        <i class="fa-solid fa-calendar-days" style="color: var(--accent-primary); width: 16px; text-align: center;"></i>
+                        <span style="color: var(--text-secondary); font-size: 0.8rem; width: 70px; flex-shrink: 0;">תאריך יעד</span>
+                        <span id="view-task-date" style="color: var(--text-primary); font-weight: 600; font-size: 0.9rem;">-</span>
                     </div>
-                    <div style="display: grid; grid-template-columns: 120px 1fr; gap: 1rem; margin-bottom: 1rem;">
-                        <strong>אחראי:</strong>
-                        <span id="view-task-assignee">-</span>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 120px 1fr; gap: 1rem; margin-bottom: 1rem;">
-                        <strong>תאריך יעד:</strong>
-                        <span id="view-task-date">-</span>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 120px 1fr; gap: 1rem; margin-bottom: 1rem;">
-                        <strong>סטטוס:</strong>
-                        <span id="view-task-status">-</span>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 120px 1fr; gap: 1rem; margin-bottom: 1rem;">
-                        <strong>עדיפות:</strong>
-                        <span id="view-task-priority">-</span>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 120px 1fr; gap: 1rem; margin-bottom: 1rem;">
-                        <strong>סטטוס חופשי:</strong>
-                        <span id="view-task-status-text">-</span>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 120px 1fr; gap: 1rem; margin-bottom: 1rem;">
-                        <strong>showstopper:</strong>
-                        <span id="view-task-showstopper">-</span>
+                    <div id="view-status-text-row" style="display: none; align-items: flex-start; gap: 0.75rem; padding: 0.6rem 0.75rem; background: var(--bg-glass); border-radius: 10px; border: 1px solid var(--border-glass);">
+                        <i class="fa-solid fa-comment-dots" style="color: var(--accent-primary); width: 16px; text-align: center; margin-top: 2px;"></i>
+                        <span style="color: var(--text-secondary); font-size: 0.8rem; width: 70px; flex-shrink: 0;">הערה</span>
+                        <span id="view-task-status-text" style="color: var(--text-primary); font-size: 0.9rem; line-height: 1.4;">-</span>
                     </div>
                 </div>
 
-                <!-- Subtasks -->
-                <div id="view-subtasks-section" style="margin-bottom: 1.5rem;">
-                    <strong style="display: block; margin-bottom: 0.5rem;">תתי-משימות:</strong>
-                    <ul id="view-subtask-list" style="list-style: none; padding: 0; margin: 0;">
-                    </ul>
-                </div>
+                <!-- Subtasks Section -->
+                <div id="view-subtasks-section" style="display: none; margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                        <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-primary);">
+                            <i class="fa-solid fa-list-check" style="color: var(--accent-primary); margin-left: 0.3rem;"></i>
+                            תתי-משימות
+                        </span>
+                        <span id="view-subtask-counter" style="font-size: 0.8rem; color: var(--text-secondary);">0/0</span>
+                    </div>
 
-                <!-- Buttons -->
-                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                    <button type="button" id="edit-from-view-btn" class="btn-primary" style="flex: 1;">
-                        <i class="fa-solid fa-pen"></i> עריכה
-                    </button>
-                    <button type="button" class="btn-cancel" id="close-view-btn" style="flex: 1;">סגור</button>
+                    <!-- Progress bar -->
+                    <div style="height: 6px; background: var(--bg-glass); border-radius: 10px; margin-bottom: 0.75rem; overflow: hidden; border: 1px solid var(--border-glass);">
+                        <div id="view-subtask-progress-bar" style="height: 100%; background: linear-gradient(90deg, var(--accent-primary), #10b981); border-radius: 10px; transition: width 0.4s ease; width: 0%;"></div>
+                    </div>
+
+                    <ul id="view-subtask-list" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.4rem;"></ul>
                 </div>
+            </div>
+
+            <!-- Footer buttons -->
+            <div style="
+                padding: 1rem 1.5rem;
+                border-top: 1px solid var(--border-glass);
+                display: flex; gap: 0.75rem;
+                background: var(--bg-glass);
+            ">
+                <button type="button" id="edit-from-view-btn" class="btn-primary" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                    <i class="fa-solid fa-pen"></i> עריכה
+                </button>
+                <button type="button" id="close-view-btn" class="btn-cancel" style="flex: 1;">סגור</button>
             </div>
         </div>
     </div>
@@ -5999,88 +6075,140 @@ function viewTask(taskId) {
     const task = tasks.find(t => t.id === taskId);
     if (!task) return;
 
-    // Get status and priority labels
-    const statusLabel = getStatusLabel(task.status);
-    const priorityLabel = task.priority === 'high' ? 'גבוהה' : task.priority === 'low' ? 'נמוכה' : task.priority === 'none' ? 'ללא' : 'בינונית';
+    // --- Color mapping ---
+    const statusColors = {
+        stuck:       { bg: 'linear-gradient(135deg, #ef4444, #b91c1c)', label: 'תקוע' },
+        in_progress: { bg: 'linear-gradient(135deg, #f59e0b, #d97706)', label: 'בעבודה' },
+        pending:     { bg: 'linear-gradient(135deg, #3b82f6, #1d4ed8)', label: 'ממתין' },
+        completed:   { bg: 'linear-gradient(135deg, #10b981, #059669)', label: 'בוצע' },
+    };
+    const priorityMap = {
+        high:   { label: '🔴 גבוהה',   color: 'rgba(239,68,68,0.15)',   text: '#ef4444' },
+        medium: { label: '🟡 בינונית', color: 'rgba(245,158,11,0.15)',  text: '#f59e0b' },
+        low:    { label: '🟢 נמוכה',   color: 'rgba(16,185,129,0.15)',  text: '#10b981' },
+        none:   { label: '⚪ ללא',      color: 'rgba(107,114,128,0.15)', text: '#6b7280' },
+    };
 
-    // Update view panel with task data
+    const sc = statusColors[task.status] || statusColors.pending;
+    const pc = priorityMap[task.priority] || priorityMap.none;
+
+    // --- Header banner ---
+    document.getElementById('view-header-banner').style.background = sc.bg;
     document.getElementById('view-task-title').textContent = task.title;
-    document.getElementById('view-task-title-value').textContent = task.title;
     document.getElementById('view-task-project').textContent = task.project || '-';
+
+    // Status badge
+    const statusBadge = document.getElementById('view-status-badge');
+    statusBadge.textContent = sc.label;
+
+    // --- Meta pills ---
+    const priorityBadge = document.getElementById('view-priority-badge');
+    priorityBadge.textContent = pc.label;
+    priorityBadge.style.background = pc.color;
+    priorityBadge.style.color = pc.text;
+    priorityBadge.style.borderColor = pc.color;
+
+    const showstopperBadge = document.getElementById('view-showstopper-badge');
+    showstopperBadge.style.display = task.showstopper ? 'inline-flex' : 'none';
+
+    // --- Info rows ---
     document.getElementById('view-task-assignee').textContent = task.assignee || '-';
     document.getElementById('view-task-date').textContent = task.dueDate || '-';
-    document.getElementById('view-task-status').textContent = statusLabel;
-    document.getElementById('view-task-priority').textContent = priorityLabel;
-    document.getElementById('view-task-status-text').textContent = task.statusText || '-';
-    document.getElementById('view-task-showstopper').textContent = task.showstopper ? 'כן' : 'לא';
 
-    // Update subtasks list
+    const statusTextRow = document.getElementById('view-status-text-row');
+    if (task.statusText) {
+        statusTextRow.style.display = 'flex';
+        document.getElementById('view-task-status-text').textContent = task.statusText;
+    } else {
+        statusTextRow.style.display = 'none';
+    }
+
+    // --- Subtasks ---
     const subtaskList = document.getElementById('view-subtask-list');
+    const subtasksSection = document.getElementById('view-subtasks-section');
+
+    function updateSubtaskProgress(subtasks) {
+        const total = subtasks.length;
+        const done = subtasks.filter(s => s.completed).length;
+        const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+        document.getElementById('view-subtask-counter').textContent = `${done}/${total}`;
+        document.getElementById('view-subtask-progress-bar').style.width = `${pct}%`;
+    }
+
     if (task.subtasks && task.subtasks.length > 0) {
+        subtasksSection.style.display = 'block';
+        updateSubtaskProgress(task.subtasks);
+
         subtaskList.innerHTML = task.subtasks.map((sub, idx) => `
-            <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-glass); display: flex; align-items: center;">
-                <input type="checkbox" data-task-id="${taskId}" data-subtask-id="${sub.id}" data-subtask-idx="${idx}"
-                    ${sub.completed ? 'checked' : ''}
-                    class="view-subtask-checkbox"
-                    style="margin-right: 0.5rem; cursor: pointer;">
-                <span class="view-subtask-span" style="cursor: pointer; ${sub.completed ? 'text-decoration: line-through; color: var(--text-secondary);' : ''}">${sub.title}</span>
+            <li data-idx="${idx}" style="
+                display: flex; align-items: center; gap: 0.6rem;
+                padding: 0.55rem 0.75rem;
+                border-radius: 8px;
+                background: ${sub.completed ? 'rgba(16,185,129,0.08)' : 'var(--bg-glass)'};
+                border: 1px solid ${sub.completed ? 'rgba(16,185,129,0.25)' : 'var(--border-glass)'};
+                cursor: pointer;
+                transition: background 0.2s;
+            " class="view-subtask-item">
+                <div style="
+                    width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+                    border: 2px solid ${sub.completed ? '#10b981' : 'var(--text-secondary)'};
+                    background: ${sub.completed ? '#10b981' : 'transparent'};
+                    display: flex; align-items: center; justify-content: center;
+                    transition: all 0.2s;
+                " class="view-subtask-circle">
+                    ${sub.completed ? '<i class="fa-solid fa-check" style="color:white;font-size:0.6rem;"></i>' : ''}
+                </div>
+                <input type="checkbox" data-task-id="${taskId}" data-subtask-idx="${idx}"
+                    ${sub.completed ? 'checked' : ''} class="view-subtask-checkbox" style="display:none;">
+                <span class="view-subtask-span" style="
+                    font-size: 0.88rem;
+                    color: ${sub.completed ? 'var(--text-secondary)' : 'var(--text-primary)'};
+                    text-decoration: ${sub.completed ? 'line-through' : 'none'};
+                    transition: all 0.2s;
+                ">${sub.title}</span>
             </li>
         `).join('');
-        document.getElementById('view-subtasks-section').style.display = 'block';
 
-        // Add event listeners to subtask checkboxes
-        const checkboxes = subtaskList.querySelectorAll('.view-subtask-checkbox');
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', (e) => {
-                const taskId = checkbox.dataset.taskId;
-                const subtaskIdx = parseInt(checkbox.dataset.subtaskIdx);
+        // Event listeners on each subtask item
+        subtaskList.querySelectorAll('.view-subtask-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const checkbox = item.querySelector('.view-subtask-checkbox');
+                const idx = parseInt(item.dataset.idx);
+                checkbox.checked = !checkbox.checked;
 
-                // Find and update the task
                 for (let i = 0; i < tasks.length; i++) {
                     if (tasks[i].id === taskId) {
-                        if (tasks[i].subtasks && tasks[i].subtasks[subtaskIdx]) {
-                            tasks[i].subtasks[subtaskIdx].completed = checkbox.checked;
+                        if (tasks[i].subtasks && tasks[i].subtasks[idx]) {
+                            tasks[i].subtasks[idx].completed = checkbox.checked;
                             saveTasks();
-                            // Re-render tasks list so the change is visible there too
                             renderTasks();
+                            updateSubtaskProgress(tasks[i].subtasks);
                         }
                         break;
                     }
                 }
 
-                // Update the span styling
-                const span = checkbox.nextElementSibling;
-                if (span) {
-                    if (checkbox.checked) {
-                        span.style.textDecoration = 'line-through';
-                        span.style.color = 'var(--text-secondary)';
-                    } else {
-                        span.style.textDecoration = 'none';
-                        span.style.color = '';
-                    }
-                }
-            });
-        });
-
-        // Also allow clicking on the span to toggle the checkbox
-        const spans = subtaskList.querySelectorAll('.view-subtask-span');
-        spans.forEach(span => {
-            span.addEventListener('click', () => {
-                const checkbox = span.previousElementSibling;
-                if (checkbox) {
-                    checkbox.checked = !checkbox.checked;
-                    checkbox.dispatchEvent(new Event('change'));
-                }
+                // Update this item visually
+                const done = checkbox.checked;
+                const circle = item.querySelector('.view-subtask-circle');
+                const span = item.querySelector('.view-subtask-span');
+                circle.style.background = done ? '#10b981' : 'transparent';
+                circle.style.borderColor = done ? '#10b981' : 'var(--text-secondary)';
+                circle.innerHTML = done ? '<i class="fa-solid fa-check" style="color:white;font-size:0.6rem;"></i>' : '';
+                span.style.textDecoration = done ? 'line-through' : 'none';
+                span.style.color = done ? 'var(--text-secondary)' : 'var(--text-primary)';
+                item.style.background = done ? 'rgba(16,185,129,0.08)' : 'var(--bg-glass)';
+                item.style.borderColor = done ? 'rgba(16,185,129,0.25)' : 'var(--border-glass)';
             });
         });
     } else {
-        document.getElementById('view-subtasks-section').style.display = 'none';
+        subtasksSection.style.display = 'none';
     }
 
-    // Store current task ID for edit button
+    // Store task ID for edit button
     document.getElementById('edit-from-view-btn').dataset.taskId = taskId;
 
-    // Show the view panel by adding active class
+    // Show panel
     const viewPanel = document.getElementById('task-view-panel');
     viewPanel.style.display = 'flex';
     viewPanel.classList.add('active');

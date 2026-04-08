@@ -6041,7 +6041,8 @@ function viewTask(taskId) {
                         if (tasks[i].subtasks && tasks[i].subtasks[subtaskIdx]) {
                             tasks[i].subtasks[subtaskIdx].completed = checkbox.checked;
                             saveTasks();
-                            console.log('Subtask saved:', tasks[i].subtasks[subtaskIdx]);
+                            // Re-render tasks list so the change is visible there too
+                            renderTasks();
                         }
                         break;
                     }

@@ -5669,7 +5669,7 @@ function renderGanttMonthly() {
                             ${dayTasks.map(task => {
                                 const color = {'stuck': '#ef4444', 'in_progress': '#f59e0b', 'pending': '#3b82f6', 'completed': '#10b981'}[task.status] || '#6b7280';
                                 return `
-                                    <div draggable-task data-task-id="${task.id}" style="
+                                    <div draggable-task data-task-id="${task.id}" onclick="viewTask('${task.id}')" style="
                                         background: ${color};
                                         color: white;
                                         padding: 0.4rem 0.6rem;
@@ -5682,9 +5682,10 @@ function renderGanttMonthly() {
                                         justify-content: space-between;
                                         align-items: center;
                                         gap: 0.4rem;
-                                    " title="${task.title}" onclick="viewTask('${task.id}')" style="position: relative;">
-                                        <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden; flex: 1;">📋 ${task.title}</span>
-                                        <button onclick="event.stopPropagation(); editTask('${task.id}')" style="
+                                        position: relative;
+                                    " title="${task.title}">
+                                        <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden; flex: 1; pointer-events: none;">📋 ${task.title}</span>
+                                        <button class="gantt-edit-btn" title="עריכה" onclick="event.stopPropagation(); editTask('${task.id}'); return false;" style="
                                             background: rgba(255,255,255,0.3);
                                             border: none;
                                             color: white;
@@ -5695,7 +5696,7 @@ function renderGanttMonthly() {
                                             opacity: 0;
                                             transition: opacity 0.2s;
                                             flex-shrink: 0;
-                                        " class="gantt-edit-btn" title="עריכה">
+                                        ">
                                             <i class="fa-solid fa-pen"></i>
                                         </button>
                                     </div>
@@ -5851,7 +5852,7 @@ function renderGanttWeekly() {
                             ${dayTasks.map(task => {
                                 const color = {'stuck': '#ef4444', 'in_progress': '#f59e0b', 'pending': '#3b82f6', 'completed': '#10b981'}[task.status] || '#6b7280';
                                 return `
-                                    <div draggable-task data-task-id="${task.id}" style="
+                                    <div draggable-task data-task-id="${task.id}" onclick="viewTask('${task.id}')" style="
                                         background: ${color};
                                         color: white;
                                         padding: 0.4rem 0.6rem;
@@ -5864,9 +5865,10 @@ function renderGanttWeekly() {
                                         justify-content: space-between;
                                         align-items: center;
                                         gap: 0.4rem;
-                                    " title="${task.title}" onclick="viewTask('${task.id}')" style="position: relative;">
-                                        <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden; flex: 1;">📋 ${task.title}</span>
-                                        <button onclick="event.stopPropagation(); editTask('${task.id}')" style="
+                                        position: relative;
+                                    " title="${task.title}">
+                                        <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden; flex: 1; pointer-events: none;">📋 ${task.title}</span>
+                                        <button class="gantt-edit-btn" title="עריכה" onclick="event.stopPropagation(); editTask('${task.id}'); return false;" style="
                                             background: rgba(255,255,255,0.3);
                                             border: none;
                                             color: white;
@@ -5877,7 +5879,7 @@ function renderGanttWeekly() {
                                             opacity: 0;
                                             transition: opacity 0.2s;
                                             flex-shrink: 0;
-                                        " class="gantt-edit-btn" title="עריכה">
+                                        ">
                                             <i class="fa-solid fa-pen"></i>
                                         </button>
                                     </div>

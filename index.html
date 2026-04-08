@@ -1771,6 +1771,11 @@ body.presentation-mode #exit-presentation-btn {
         gap: 0;
     }
 }
+
+    /* Gantt Task Edit Button - Show on Hover */
+    [draggable-task]:hover .gantt-edit-btn {
+        opacity: 1 !important;
+    }
     </style>
 </head>
 
@@ -2292,6 +2297,69 @@ body.presentation-mode #exit-presentation-btn {
         </div>
     </div>
 
+    <!-- Task View Panel (Read-only) -->
+    <div class="modal-overlay" id="task-view-panel" style="display: none;">
+        <div class="modal-content glass-card" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 id="view-task-title">פרטי המשימה</h2>
+                <button class="close-modal" id="close-view-panel-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div style="padding: 1.5rem; color: var(--text-primary);">
+                <!-- Task Details -->
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="display: grid; grid-template-columns: 120px 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <strong>כותרת:</strong>
+                        <span id="view-task-title-value">-</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 120px 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <strong>פרויקט:</strong>
+                        <span id="view-task-project">-</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 120px 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <strong>אחראי:</strong>
+                        <span id="view-task-assignee">-</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 120px 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <strong>תאריך יעד:</strong>
+                        <span id="view-task-date">-</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 120px 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <strong>סטטוס:</strong>
+                        <span id="view-task-status">-</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 120px 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <strong>עדיפות:</strong>
+                        <span id="view-task-priority">-</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 120px 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <strong>סטטוס חופשי:</strong>
+                        <span id="view-task-status-text">-</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 120px 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <strong>showstopper:</strong>
+                        <span id="view-task-showstopper">-</span>
+                    </div>
+                </div>
+
+                <!-- Subtasks -->
+                <div id="view-subtasks-section" style="margin-bottom: 1.5rem;">
+                    <strong style="display: block; margin-bottom: 0.5rem;">תתי-משימות:</strong>
+                    <ul id="view-subtask-list" style="list-style: none; padding: 0; margin: 0;">
+                    </ul>
+                </div>
+
+                <!-- Buttons -->
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" id="edit-from-view-btn" class="btn-primary" style="flex: 1;">
+                        <i class="fa-solid fa-pen"></i> עריכה
+                    </button>
+                    <button type="button" class="btn-cancel" id="close-view-btn" style="flex: 1;">סגור</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- New Purchase Modal -->
     <div class="modal-overlay" id="purchase-modal">
         <div class="modal-content glass-card">
@@ -2730,6 +2798,27 @@ function setupEventListeners() {
     btnNewTaskNav.addEventListener('click', () => openModal('task'));
     btnCloseModal.addEventListener('click', () => closeModal('task'));
     btnCancelTask.addEventListener('click', () => closeModal('task'));
+
+    // Task View Panel
+    const taskViewPanel = document.getElementById('task-view-panel');
+    const closeViewPanelBtn = document.getElementById('close-view-panel-btn');
+    const closeViewBtn = document.getElementById('close-view-btn');
+    const editFromViewBtn = document.getElementById('edit-from-view-btn');
+
+    if (closeViewPanelBtn) closeViewPanelBtn.addEventListener('click', () => {
+        taskViewPanel.style.display = 'none';
+    });
+    if (closeViewBtn) closeViewBtn.addEventListener('click', () => {
+        taskViewPanel.style.display = 'none';
+    });
+    if (editFromViewBtn) editFromViewBtn.addEventListener('click', () => {
+        const taskId = editFromViewBtn.dataset.taskId;
+        taskViewPanel.style.display = 'none';
+        editTask(taskId);
+    });
+    taskViewPanel.addEventListener('click', (e) => {
+        if (e.target === taskViewPanel) taskViewPanel.style.display = 'none';
+    });
 
     // Purchase Modal
     btnNewPurchaseNav.addEventListener('click', () => openModal('purchase'));
@@ -5588,12 +5677,27 @@ function renderGanttMonthly() {
                                         font-size: 0.75rem;
                                         margin-bottom: 0.3rem;
                                         cursor: pointer;
-                                        overflow: hidden;
-                                        text-overflow: ellipsis;
-                                        white-space: nowrap;
                                         user-select: none;
-                                    " title="${task.title}" onclick="editTask('${task.id}')">
-                                        📋 ${task.title}
+                                        display: flex;
+                                        justify-content: space-between;
+                                        align-items: center;
+                                        gap: 0.4rem;
+                                    " title="${task.title}" onclick="viewTask('${task.id}')" style="position: relative;">
+                                        <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden; flex: 1;">📋 ${task.title}</span>
+                                        <button onclick="event.stopPropagation(); editTask('${task.id}')" style="
+                                            background: rgba(255,255,255,0.3);
+                                            border: none;
+                                            color: white;
+                                            padding: 0.2rem 0.4rem;
+                                            border-radius: 3px;
+                                            cursor: pointer;
+                                            font-size: 0.65rem;
+                                            opacity: 0;
+                                            transition: opacity 0.2s;
+                                            flex-shrink: 0;
+                                        " class="gantt-edit-btn" title="עריכה">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </button>
                                     </div>
                                 `;
                             }).join('')}
@@ -5755,12 +5859,27 @@ function renderGanttWeekly() {
                                         font-size: 0.75rem;
                                         margin-bottom: 0.3rem;
                                         cursor: pointer;
-                                        overflow: hidden;
-                                        text-overflow: ellipsis;
-                                        white-space: nowrap;
                                         user-select: none;
-                                    " title="${task.title}" onclick="editTask('${task.id}')">
-                                        📋 ${task.title}
+                                        display: flex;
+                                        justify-content: space-between;
+                                        align-items: center;
+                                        gap: 0.4rem;
+                                    " title="${task.title}" onclick="viewTask('${task.id}')" style="position: relative;">
+                                        <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden; flex: 1;">📋 ${task.title}</span>
+                                        <button onclick="event.stopPropagation(); editTask('${task.id}')" style="
+                                            background: rgba(255,255,255,0.3);
+                                            border: none;
+                                            color: white;
+                                            padding: 0.2rem 0.4rem;
+                                            border-radius: 3px;
+                                            cursor: pointer;
+                                            font-size: 0.65rem;
+                                            opacity: 0;
+                                            transition: opacity 0.2s;
+                                            flex-shrink: 0;
+                                        " class="gantt-edit-btn" title="עריכה">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </button>
                                     </div>
                                 `;
                             }).join('')}
@@ -5867,6 +5986,46 @@ function editTask(taskId) {
         renderModalSubtasks();
         openModal('task', taskId);
     }
+}
+
+function viewTask(taskId) {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+
+    // Get status and priority labels
+    const statusLabel = getStatusLabel(task.status);
+    const priorityLabel = task.priority === 'high' ? 'גבוהה' : task.priority === 'low' ? 'נמוכה' : task.priority === 'none' ? 'ללא' : 'בינונית';
+
+    // Update view panel with task data
+    document.getElementById('view-task-title').textContent = task.title;
+    document.getElementById('view-task-title-value').textContent = task.title;
+    document.getElementById('view-task-project').textContent = task.project || '-';
+    document.getElementById('view-task-assignee').textContent = task.assignee || '-';
+    document.getElementById('view-task-date').textContent = task.dueDate || '-';
+    document.getElementById('view-task-status').textContent = statusLabel;
+    document.getElementById('view-task-priority').textContent = priorityLabel;
+    document.getElementById('view-task-status-text').textContent = task.statusText || '-';
+    document.getElementById('view-task-showstopper').textContent = task.showstopper ? 'כן' : 'לא';
+
+    // Update subtasks list
+    const subtaskList = document.getElementById('view-subtask-list');
+    if (task.subtasks && task.subtasks.length > 0) {
+        subtaskList.innerHTML = task.subtasks.map(sub => `
+            <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-glass);">
+                <input type="checkbox" ${sub.completed ? 'checked' : ''} disabled style="margin-right: 0.5rem;">
+                <span style="${sub.completed ? 'text-decoration: line-through; color: var(--text-secondary);' : ''}">${sub.title}</span>
+            </li>
+        `).join('');
+        document.getElementById('view-subtasks-section').style.display = 'block';
+    } else {
+        document.getElementById('view-subtasks-section').style.display = 'none';
+    }
+
+    // Store current task ID for edit button
+    document.getElementById('edit-from-view-btn').dataset.taskId = taskId;
+
+    // Show the view panel
+    document.getElementById('task-view-panel').style.display = 'flex';
 }
 
 // ================ END GANTT CHART ================

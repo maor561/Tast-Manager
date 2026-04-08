@@ -6017,13 +6017,58 @@ function viewTask(taskId) {
     // Update subtasks list
     const subtaskList = document.getElementById('view-subtask-list');
     if (task.subtasks && task.subtasks.length > 0) {
-        subtaskList.innerHTML = task.subtasks.map(sub => `
-            <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-glass);">
-                <input type="checkbox" ${sub.completed ? 'checked' : ''} disabled style="margin-right: 0.5rem;">
-                <span style="${sub.completed ? 'text-decoration: line-through; color: var(--text-secondary);' : ''}">${sub.title}</span>
+        subtaskList.innerHTML = task.subtasks.map((sub, idx) => `
+            <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-glass); display: flex; align-items: center;">
+                <input type="checkbox" data-task-id="${taskId}" data-subtask-id="${sub.id}" data-subtask-idx="${idx}"
+                    ${sub.completed ? 'checked' : ''}
+                    class="view-subtask-checkbox"
+                    style="margin-right: 0.5rem; cursor: pointer;">
+                <span class="view-subtask-span" style="cursor: pointer; ${sub.completed ? 'text-decoration: line-through; color: var(--text-secondary);' : ''}">${sub.title}</span>
             </li>
         `).join('');
         document.getElementById('view-subtasks-section').style.display = 'block';
+
+        // Add event listeners to subtask checkboxes
+        setTimeout(() => {
+            const checkboxes = subtaskList.querySelectorAll('.view-subtask-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', (e) => {
+                    const taskId = checkbox.dataset.taskId;
+                    const subtaskId = checkbox.dataset.subtaskId;
+                    const task = tasks.find(t => t.id === taskId);
+                    if (task) {
+                        const subtask = task.subtasks.find(s => s.id === subtaskId);
+                        if (subtask) {
+                            subtask.completed = checkbox.checked;
+                            saveTasks();
+                            // Update the span styling
+                            const span = checkbox.nextElementSibling;
+                            if (span) {
+                                if (subtask.completed) {
+                                    span.style.textDecoration = 'line-through';
+                                    span.style.color = 'var(--text-secondary)';
+                                } else {
+                                    span.style.textDecoration = 'none';
+                                    span.style.color = '';
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+
+            // Also allow clicking on the span to toggle the checkbox
+            const spans = subtaskList.querySelectorAll('.view-subtask-span');
+            spans.forEach(span => {
+                span.addEventListener('click', () => {
+                    const checkbox = span.previousElementSibling;
+                    if (checkbox) {
+                        checkbox.checked = !checkbox.checked;
+                        checkbox.dispatchEvent(new Event('change'));
+                    }
+                });
+            });
+        }, 0);
     } else {
         document.getElementById('view-subtasks-section').style.display = 'none';
     }

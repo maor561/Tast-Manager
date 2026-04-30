@@ -3449,6 +3449,7 @@ function handleTaskSubmit(e) {
     updateFilterOptions();
     renderTasks();
     updateDashboard();
+    renderGanttCalendar();
     if (selectReportProject.value) renderReport();
     closeModal('task');
 }

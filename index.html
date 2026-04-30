@@ -2258,6 +2258,15 @@ body.presentation-mode #exit-presentation-btn {
                     <label>תתי-משימות (Subtasks)</label>
                     <div class="subtask-input-group">
                         <input type="text" id="new-subtask-title" placeholder="הוסף תת-משימה...">
+                        <input type="date" id="new-subtask-date" style="
+                            padding: 0.5rem 0.75rem;
+                            background: var(--bg-glass);
+                            border: 1px solid var(--border-glass);
+                            border-radius: 8px;
+                            color: var(--text-primary);
+                            font-size: 0.85rem;
+                            flex-shrink: 0;
+                        ">
                         <button type="button" id="add-subtask-btn" class="btn-secondary btn-sm"><i
                                 class="fa-solid fa-plus"></i></button>
                     </div>
@@ -3303,13 +3312,17 @@ function closeModal(type) {
 // ---------------- Subtask Logic ----------------
 function addSubtask() {
     const title = inputSubtaskTitle.value.trim();
+    const dateInput = document.getElementById('new-subtask-date');
+    const dueDate = dateInput ? dateInput.value : '';
     if (title) {
         currentSubtasks.push({
             id: 'sub_' + Date.now() + Math.random().toString(36).substr(2, 9),
             title: title,
+            dueDate: dueDate,
             completed: false
         });
         inputSubtaskTitle.value = '';
+        if (dateInput) dateInput.value = '';
         renderModalSubtasks();
     }
 }
@@ -3321,30 +3334,59 @@ function removeSubtask(index) {
 
 function renderModalSubtasks() {
     modalSubtaskList.innerHTML = currentSubtasks.map((sub, index) => `
-        <li class="modal-subtask-item">
-            <div style="flex: 1; display: flex; align-items: center; gap: 0.8rem;">
-                <i class="fa-solid fa-circle-dot" style="font-size: 0.6rem; opacity: 0.5;"></i>
-                ${sub.isEditing ?
-            `<input type="text" class="subtask-edit-input" value="${sub.title}" onblur="saveSubtaskEdit(${index}, this.value)" onkeydown="if(event.key==='Enter') this.blur()">` :
-            `<span onclick="editSubtask(${index})">${sub.title}</span>`
-        }
+        <li class="modal-subtask-item" style="flex-direction: column; align-items: stretch; gap: 0.4rem; padding: 0.6rem 0.75rem;">
+            <div style="display: flex; align-items: center; gap: 0.6rem;">
+                <i class="fa-solid fa-circle-dot" style="font-size: 0.6rem; opacity: 0.5; flex-shrink:0;"></i>
+                <div style="flex: 1; min-width: 0;">
+                    ${sub.isEditing ?
+                        `<input type="text" class="subtask-edit-input" value="${sub.title}" onblur="saveSubtaskEdit(${index}, this.value)" onkeydown="if(event.key==='Enter') this.blur()">` :
+                        `<span onclick="editSubtask(${index})" style="cursor:pointer; font-size: 0.88rem;">${sub.title}</span>`
+                    }
+                </div>
+                <div class="subtask-controls" style="flex-shrink:0;">
+                    <button type="button" class="btn-subtask-action" onclick="moveSubtask(${index}, -1)" title="למעלה"><i class="fa-solid fa-chevron-up"></i></button>
+                    <button type="button" class="btn-subtask-action" onclick="moveSubtask(${index}, 1)" title="למטה"><i class="fa-solid fa-chevron-down"></i></button>
+                    <button type="button" class="btn-subtask-action" onclick="editSubtask(${index})" title="ערוך"><i class="fa-solid fa-pen"></i></button>
+                    <button type="button" class="btn-subtask-action delete" onclick="removeSubtask(${index})" title="מחק"><i class="fa-solid fa-trash-can"></i></button>
+                </div>
             </div>
-            <div class="subtask-controls">
-                <button type="button" class="btn-subtask-action" onclick="moveSubtask(${index}, -1)" title="למעלה">
-                    <i class="fa-solid fa-chevron-up"></i>
-                </button>
-                <button type="button" class="btn-subtask-action" onclick="moveSubtask(${index}, 1)" title="למטה">
-                    <i class="fa-solid fa-chevron-down"></i>
-                </button>
-                <button type="button" class="btn-subtask-action" onclick="editSubtask(${index})" title="ערוך">
-                    <i class="fa-solid fa-pen"></i>
-                </button>
-                <button type="button" class="btn-subtask-action delete" onclick="removeSubtask(${index})" title="מחק">
-                    <i class="fa-solid fa-trash-can"></i>
-                </button>
+            <div style="display: flex; align-items: center; gap: 0.4rem; padding-right: 1.2rem;">
+                <i class="fa-solid fa-calendar-days" style="font-size: 0.7rem; color: var(--accent-primary); opacity: 0.8;"></i>
+                <input type="date" value="${sub.dueDate || ''}"
+                    onchange="updateSubtaskDate(${index}, this.value)"
+                    style="
+                        font-size: 0.75rem;
+                        padding: 0.2rem 0.4rem;
+                        background: var(--bg-glass);
+                        border: 1px solid var(--border-glass);
+                        border-radius: 6px;
+                        color: ${sub.dueDate ? 'var(--accent-primary)' : 'var(--text-secondary)'};
+                        cursor: pointer;
+                        outline: none;
+                    "
+                    title="תאריך יעד לתת-משימה">
+                ${sub.dueDate ? `<span style="font-size: 0.72rem; color: var(--text-secondary);">${formatSubtaskDate(sub.dueDate)}</span>` : `<span style="font-size: 0.72rem; color: var(--text-secondary); opacity: 0.5;">ללא תאריך</span>`}
             </div>
         </li>
     `).join('');
+}
+
+function updateSubtaskDate(index, date) {
+    currentSubtasks[index].dueDate = date;
+    renderModalSubtasks();
+}
+
+function formatSubtaskDate(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    d.setHours(0,0,0,0);
+    const diff = Math.round((d - today) / (1000*60*60*24));
+    if (diff < 0) return `<span style="color:#ef4444;">⚠️ פג ${Math.abs(diff)}י</span>`;
+    if (diff === 0) return `<span style="color:#f59e0b;">היום</span>`;
+    if (diff === 1) return `<span style="color:#f59e0b;">מחר</span>`;
+    return `בעוד ${diff} ימים`;
 }
 
 function editSubtask(index) {
@@ -4698,6 +4740,9 @@ function renderTargets() {
             if (target.trackingType === 'quantitative') {
                 progress = target.targetValue > 0 ? Math.round((target.actualValue / target.targetValue) * 100) : 0;
                 progressText = `${target.actualValue} מתוך ${target.targetValue}`;
+            } else if (target.trackingType === 'boolean') {
+                progress = target.status === 'completed' ? 100 : 0;
+                progressText = target.status === 'completed' ? '✅ בוצע' : '⏳ טרם בוצע';
             } else {
                 const projectTasks = tasks.filter(task => task.project === target.project);
                 const totalTasks = projectTasks.length;
@@ -6168,12 +6213,19 @@ function viewTask(taskId) {
                 </div>
                 <input type="checkbox" data-task-id="${taskId}" data-subtask-idx="${idx}"
                     ${sub.completed ? 'checked' : ''} class="view-subtask-checkbox" style="display:none;">
-                <span class="view-subtask-span" style="
-                    font-size: 0.88rem;
-                    color: ${sub.completed ? 'var(--text-secondary)' : 'var(--text-primary)'};
-                    text-decoration: ${sub.completed ? 'line-through' : 'none'};
-                    transition: all 0.2s;
-                ">${sub.title}</span>
+                <div style="flex:1; min-width:0;">
+                    <span class="view-subtask-span" style="
+                        font-size: 0.88rem;
+                        color: ${sub.completed ? 'var(--text-secondary)' : 'var(--text-primary)'};
+                        text-decoration: ${sub.completed ? 'line-through' : 'none'};
+                        transition: all 0.2s;
+                        display: block;
+                    ">${sub.title}</span>
+                    ${sub.dueDate ? `<span style="font-size: 0.72rem; color: var(--accent-primary); opacity: 0.85; display:flex; align-items:center; gap:0.25rem; margin-top:0.15rem;">
+                        <i class="fa-solid fa-calendar-days" style="font-size:0.65rem;"></i>
+                        ${formatSubtaskDate(sub.dueDate)}
+                    </span>` : ''}
+                </div>
             </li>
         `).join('');
 
